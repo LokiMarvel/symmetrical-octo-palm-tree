@@ -46,8 +46,8 @@ public class UserService {
             if(byEmail.isPresent()) {
                 return "User has already registered with the given mail address.";
             } else {
-                user = userRepository.save(user);
-                return getJwtToken(mapper.map(user,UserDao.class));
+                userRepository.save(user);
+                return getJwtToken(userDao);
             }
         } catch (Exception exception) {
             log.error(exception.getMessage());
