@@ -3,17 +3,17 @@ package org.wines.authentications.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.wines.authentications.dao.UserDao;
 import org.wines.authentications.jwt.JWT;
+import org.wines.authentications.models.Authority;
 import org.wines.authentications.models.Role;
 import org.wines.authentications.models.User;
+import org.wines.authentications.repositories.AuthorityRepository;
 import org.wines.authentications.repositories.UserRepository;
 
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWT jwt;
     private final AuthenticationManager authenticationManager;
@@ -37,7 +38,7 @@ public class UserService {
         user.setAccountExpired(true);// TODO need to change from false to true in place of default database
         user.setCredentialsExpired(true);//TODO need to change from false to true in place of default database
         user.setAccountLocked(true);// TODO need to change from false to true in place of default database
-        user.setRole(Role.ROLE_USER);
+//        user.setAuthorities(List.of(Authority.builder().email(user).users_role("ROLE_USER").build()));
         //TODO upto here
         try {
             // need to check for userEmail and userName before creation
@@ -47,6 +48,7 @@ public class UserService {
                 return "User has already registered with the given mail address.";
             } else {
                 userRepository.save(user);
+                authorityRepository.save(Authority.builder().email(user).users_role("ROLE_USER").build());
                 return getJwtToken(userDao);
             }
         } catch (Exception exception) {

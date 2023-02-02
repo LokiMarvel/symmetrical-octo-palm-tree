@@ -9,8 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +19,6 @@ import java.util.List;
 @Table(name = "users",schema = "public")
 public class User implements UserDetails {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(insertable = false,updatable = false,nullable = false)
     private String userid;
@@ -28,8 +26,12 @@ public class User implements UserDetails {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Id
     @Column(unique = true,updatable = false,nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "email",fetch = FetchType.EAGER)
+    private List<Authority> authorities;
 
     @Column
     private boolean accountExpired;
@@ -37,12 +39,13 @@ public class User implements UserDetails {
     private boolean credentialsExpired;
     private boolean enabled;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        Collection<SimpleGrantedAuthority> permissions = new LinkedList<>();
+        if (this.authorities == null || this.authorities.isEmpty())
+            return Collections.emptyList();
+        authorities.forEach(x -> permissions.add(new SimpleGrantedAuthority(x.getUsers_role())));
+        return permissions;
     }
 
     @Override

@@ -5,9 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
@@ -15,11 +14,16 @@ import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 @Builder
 @Entity
 @Table(name = "authorities")
-public class Authority {
+public class Authority implements Serializable {
 
     @Id
-    @Column(name = "username")
-    private String username;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name = "users_role")
     private String users_role;
+
+    @ManyToOne
+    @JoinColumn(name = "email")
+    private User email;
 }
