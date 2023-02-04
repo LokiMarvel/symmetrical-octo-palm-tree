@@ -34,7 +34,6 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_TEST','ROLE_GUEST','ROLE_ADMIN')")
     public ResponseEntity<?> getAllUsers() {
-        SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(System.out::println);
         return ResponseEntity.ok(userService.getAllUsers());
     }
 }
