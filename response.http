@@ -1,2 +1,2 @@
 
-GET http://www.localhost:8080/authentication/authentication
+GET http://www.localhost:8080/authentication/telephone

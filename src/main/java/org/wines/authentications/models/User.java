@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "email",fetch = FetchType.EAGER)
     private List<Telephone> telephoneList;
 
+    @OneToMany(mappedBy = "email",fetch = FetchType.EAGER)
+    private List<Address> addresses;
+
     @Column(name="account_non_expired")
     private boolean accountExpired;
     @Column(name="account_non_locked")

@@ -70,9 +70,12 @@ public class UserService {
         return mapper.map(users,new TypeToken<List<UserDao>>(){}.getType());
     }
 
-    public String getUserEmail() {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication();
-        log.info(principal.getEmail());
+    public Optional<User> getUserByEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail);
+    }
+
+    public String getEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal.toString();
     }
 
