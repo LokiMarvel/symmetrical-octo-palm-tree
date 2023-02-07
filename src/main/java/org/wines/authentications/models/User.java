@@ -20,23 +20,32 @@ import java.util.*;
 public class User implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(insertable = false,updatable = false,nullable = false)
+    @Column(name = "user_id",insertable = false,updatable = false,nullable = false)
     private String userid;
-    @Column(nullable = false,unique = true)
+    @Column(name = "username" ,nullable = false,unique = true)
     private String username;
-    @Column(nullable = false)
+    @Column(name = "password",nullable = false)
     private String password;
     @Id
-    @Column(unique = true,updatable = false,nullable = false)
+    @Column(name = "email" ,unique = true,updatable = false,nullable = false)
     private String email;
 
     @OneToMany(mappedBy = "email",fetch = FetchType.EAGER)
     private List<Authority> authorities;
 
-    @Column
+    @OneToMany(mappedBy = "email",fetch = FetchType.EAGER)
+    private List<Telephone> telephoneList;
+
+    @OneToMany(mappedBy = "email",fetch = FetchType.EAGER)
+    private List<Address> addresses;
+
+    @Column(name="account_non_expired")
     private boolean accountExpired;
+    @Column(name="account_non_locked")
     private boolean accountLocked;
+    @Column(name="credentials_non_expired")
     private boolean credentialsExpired;
+    @Column(name = "enabled")
     private boolean enabled;
 
     @Override

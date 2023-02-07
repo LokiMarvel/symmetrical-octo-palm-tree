@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.wines.authentications.dao.UserDao;
@@ -67,6 +68,15 @@ public class UserService {
         var users = userRepository.findAll();
         ModelMapper mapper = new ModelMapper();
         return mapper.map(users,new TypeToken<List<UserDao>>(){}.getType());
+    }
+
+    public Optional<User> getUserByEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail);
+    }
+
+    public String getEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.toString();
     }
 
     public String encodePassword(String password) {
